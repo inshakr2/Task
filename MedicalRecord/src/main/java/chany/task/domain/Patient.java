@@ -1,6 +1,8 @@
 package chany.task.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Patient {
@@ -13,6 +15,9 @@ public class Patient {
     @ManyToOne
     @JoinColumn(name = "HOSPITAL_ID")
     private Hospital hospital;
+
+    @OneToMany(mappedBy = "patient")
+    private List<Visit> visits = new ArrayList<>();
 
     @Column(length = 45, nullable = false)
     private String name;
