@@ -7,9 +7,9 @@ import java.util.List;
 @Entity
 public class Patient {
 
-    @Column(columnDefinition = "BIGINT UNSIGNED")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     private Long patientId;
 
     @ManyToOne
