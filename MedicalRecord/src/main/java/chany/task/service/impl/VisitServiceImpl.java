@@ -1,12 +1,13 @@
-package chany.task.service;
+package chany.task.service.impl;
 
 import chany.task.domain.Visit;
 import chany.task.repository.VisitRepository;
+import chany.task.service.VisitService;
 
 import java.util.List;
 import java.util.Optional;
 
-public class VisitServiceImpl implements VisitService{
+public class VisitServiceImpl implements VisitService {
 
     private final VisitRepository visitRepository;
 

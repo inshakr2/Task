@@ -1,12 +1,13 @@
-package chany.task.service;
+package chany.task.service.impl;
 
 import chany.task.domain.Patient;
 import chany.task.repository.PatientRepository;
+import chany.task.service.PatientService;
 
 import java.util.List;
 import java.util.Optional;
 
-public class PatientServiceImpl implements PatientService{
+public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
 
