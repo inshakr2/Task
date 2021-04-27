@@ -2,10 +2,12 @@ package chany.task.service;
 
 import chany.task.domain.Patient;
 import chany.task.domain.Visit;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public interface VisitService {
     public Long regist(Visit visit);
     public List<Visit> findAll();
