@@ -3,6 +3,8 @@ package chany.task.MedicalRecord2.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -22,4 +24,13 @@ public class Patient extends BaseEntity{
     private String gender;
     private String birth;
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "patient")
+    private List<Visit> visits = new ArrayList<>();
+
+    public void register(Visit visit) {
+        visits.add(visit);
+        visit.setPatient(this);
+    }
+
 }
