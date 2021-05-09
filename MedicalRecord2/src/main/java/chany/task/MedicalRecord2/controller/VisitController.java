@@ -8,13 +8,12 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import java.net.URI;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -35,7 +34,7 @@ public class VisitController {
                                       Errors errors) {
 
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return ResponseEntity.badRequest().build();
         }
 
         Visit visit = modelMapper.map(visitDto, Visit.class);
@@ -45,6 +44,19 @@ public class VisitController {
 
         return ResponseEntity.created(location).body(newVisit);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getVisit(@PathVariable Long id) {
+
+        Optional<Visit> findVisit = this.visitRepository.findById(id);
+
+        if (findVisit.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            Visit visit = findVisit.get();
+            return ResponseEntity.ok(visit);
+        }
     }
 
 

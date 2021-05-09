@@ -1,10 +1,12 @@
 package chany.task.MedicalRecord2.controller;
 
+
+import chany.task.MedicalRecord2.domain.Visit;
 import chany.task.MedicalRecord2.dto.VisitDto;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
@@ -18,9 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -44,8 +44,14 @@ public class VisitControllerTest {
     @Autowired
     ModelMapper modelMapper;
 
+    @Before
+    public void setUp() {
+        this.visitRepository.deleteAll();
+        this.patientRepository.deleteAll();
+    }
+
     @Test
-    public void createVisit() throws Exception {
+    public void Visit생성() throws Exception {
 
         VisitDto visit = VisitDto.builder()
                 .dateTime(LocalDateTime.now())
@@ -59,9 +65,51 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("id").exists())
                 .andExpect(header().exists(HttpHeaders.LOCATION))
         ;
+    }
+
+    @Test
+    public void 비어있는_입력값_Visit생성() throws Exception {
+
+        VisitDto visit = VisitDto.builder().build();
+
+        mockMvc.perform(post("/api/visits/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(visit)))
+                .andExpect(status().isBadRequest())
+        ;
+    }
+
+    @Test
+    public void Visit조회() throws Exception {
+        Visit visit = this.generateVisit();
+
+        this.mockMvc.perform(get("/api/visits/{id}", visit.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").exists())
+                .andExpect(jsonPath("dateTime").exists())
+                ;
+    }
+
+    @Test
+    public void 없는Visit조회() throws Exception {
+        this.visitRepository.deleteAll();
+
+        this.mockMvc.perform(get("/api/visits/0"))
+                .andExpect(status().isNotFound())
+        ;
+    }
 
 
+    private Visit generateVisit() {
+        Visit visit = buildVisit();
+        return this.visitRepository.save(visit);
+    }
 
+    private Visit buildVisit() {
+
+        return Visit.builder()
+                .dateTime(LocalDateTime.now())
+                .build();
     }
 
 }
