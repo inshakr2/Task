@@ -59,5 +59,37 @@ public class VisitController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity updateVisit(@PathVariable Long id,
+                                      @RequestBody @Valid VisitDto visitDto,
+                                      Errors errors) {
+
+        Optional<Visit> findVisit = this.visitRepository.findById(id);
+        if (findVisit.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Visit existingVisit = findVisit.get();
+        this.modelMapper.map(visitDto, existingVisit);
+        Visit saveVisit = this.visitRepository.save(existingVisit);
+
+        return ResponseEntity.ok(existingVisit);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteVisit(@PathVariable Long id) {
+        Optional<Visit> findVisit = this.visitRepository.findById(id);
+
+        if (findVisit.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        this.visitRepository.deleteById(findVisit.get().getId());
+        return ResponseEntity.ok().build();
+    }
 
 }

@@ -68,7 +68,7 @@ public class VisitControllerTest {
     }
 
     @Test
-    public void 비어있는_입력값_Visit생성() throws Exception {
+    public void 비어있는_입력값_Visit생성_400() throws Exception {
 
         VisitDto visit = VisitDto.builder().build();
 
@@ -91,12 +91,72 @@ public class VisitControllerTest {
     }
 
     @Test
-    public void 없는Visit조회() throws Exception {
+    public void 없는Visit조회_404() throws Exception {
         this.visitRepository.deleteAll();
 
         this.mockMvc.perform(get("/api/visits/0"))
                 .andExpect(status().isNotFound())
         ;
+    }
+
+    @Test
+    public void Visit수정() throws Exception {
+        Visit visit = this.generateVisit();
+
+        LocalDateTime newDate = LocalDateTime.of(1993, 2, 8, 20, 0);
+        VisitDto updateVisit = this.modelMapper.map(visit, VisitDto.class);
+        updateVisit.setDateTime(newDate);
+
+        this.mockMvc.perform(put("/api/visits/{id}", visit.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(updateVisit))
+                    )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("dateTime").exists());
+
+    }
+
+    @Test
+    public void 없는_visit수정_404() throws Exception {
+        this.visitRepository.deleteAll();
+        Visit visit = this.generateVisit();
+        VisitDto visitDto = this.modelMapper.map(visit, VisitDto.class);
+
+        this.mockMvc.perform(put("/api/visits/0")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(this.objectMapper.writeValueAsString(visitDto)))
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void visit_빈값으로_수정_400() throws Exception {
+        Visit visit = this.generateVisit();
+
+        VisitDto updateVisit = new VisitDto();
+
+        this.mockMvc.perform(put("/api/visits/{id}", visit.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(this.objectMapper.writeValueAsString(updateVisit)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void visit삭제() throws Exception{
+        Visit visit = this.generateVisit();
+
+        this.mockMvc.perform(delete("/api/visits/{id}", visit.getId()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void 없는visit삭제_404() throws Exception{
+        this.visitRepository.deleteAll();
+
+        this.mockMvc.perform(delete("/api/visits/0"))
+                .andExpect(status().isNotFound());
     }
 
 
