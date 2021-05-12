@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class VisitDto {
 
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDateTime dateTime = LocalDateTime.now();
 
 }

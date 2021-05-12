@@ -29,8 +29,8 @@ public class Patient extends BaseEntity{
     private List<Visit> visits = new ArrayList<>();
 
     public void register(Visit visit) {
-        visits.add(visit);
         visit.setPatient(this);
+        visits.add(visit);
     }
 
 }
