@@ -21,6 +21,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,6 +67,8 @@ public class MainControllerTest {
 
     @Test
     public void 환자등록() throws Exception {
+        // hospital
+        Hospital hospital = this.hospitalRepository.findById(1L).get();
 
 
         // Given
@@ -73,6 +77,7 @@ public class MainControllerTest {
                 .birth("1993-02-08")
                 .gender("M")
                 .phoneNumber("010-1111-1111")
+                .hospital(hospital)
                 .build();
 
 
@@ -83,5 +88,16 @@ public class MainControllerTest {
                         .andExpect(status().isCreated())
                         .andExpect(jsonPath("name").exists())
                         ;
+    }
+
+    @Test
+    public void 빈_입력값_환자등록_404() throws Exception {
+        PatientDto patientDto = new PatientDto();
+
+        this.mockMvc.perform(post("/api/main/patients")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(this.objectMapper.writeValueAsString(patientDto)))
+                            .andDo(print())
+                            .andExpect(status().isBadRequest());
     }
 }

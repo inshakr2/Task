@@ -43,7 +43,10 @@ public class MainController {
         }
 
         Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
-        Visit currentVisit = this.modelMapper.map(new VisitDto(), Visit.class);
+        VisitDto visitDto = VisitDto.builder()
+                .hospital(patientDto.getHospital())
+                .build();
+        Visit currentVisit = this.modelMapper.map(visitDto, Visit.class);
         this.patientRepository.save(registPatient);
         this.visitRepository.save(currentVisit);
 

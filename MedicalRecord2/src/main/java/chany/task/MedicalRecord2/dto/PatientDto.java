@@ -1,5 +1,6 @@
 package chany.task.MedicalRecord2.dto;
 
+import chany.task.MedicalRecord2.domain.Hospital;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,5 @@ public class PatientDto {
     private String gender;
     private String birth;
     private String phoneNumber;
+    private Hospital hospital;
 }
