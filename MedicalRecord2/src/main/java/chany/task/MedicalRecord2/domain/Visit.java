@@ -13,10 +13,10 @@ public class Visit extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "VISIT_ID")
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOSPITAL_ID")
     private Hospital hospital;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PATIENT_ID")
     private Patient patient;
     private LocalDateTime dateTime;

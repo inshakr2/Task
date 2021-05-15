@@ -1,5 +1,6 @@
 package chany.task.MedicalRecord2.controller;
 
+import chany.task.MedicalRecord2.domain.Hospital;
 import chany.task.MedicalRecord2.domain.Patient;
 import chany.task.MedicalRecord2.domain.Visit;
 import chany.task.MedicalRecord2.dto.PatientDto;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -42,16 +44,20 @@ public class MainController {
             return ResponseEntity.badRequest().body(errors);
         }
 
-        Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
+        Hospital currentHospital = patientDto.getHospital();
         VisitDto visitDto = VisitDto.builder()
-                .hospital(patientDto.getHospital())
+                .dateTime(LocalDateTime.now())
+                .hospital(currentHospital)
                 .build();
+
+        Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
         Visit currentVisit = this.modelMapper.map(visitDto, Visit.class);
-        this.patientRepository.save(registPatient);
         this.visitRepository.save(currentVisit);
 
-        registPatient.getVisits().add(currentVisit);
-//        registPatient.register(currentVisit);
+//        registPatient.getVisits().add(currentVisit);
+        registPatient.register(currentVisit);
+        this.patientRepository.save(registPatient);
+
 
         URI location = linkTo(MainController.class).slash(registPatient.getId()).toUri();
 

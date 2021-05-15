@@ -90,7 +90,7 @@ public class domianTest {
 
         Visit currentVisit = this.modelMapper.map(new VisitDto(), Visit.class);
         registPatient.setHospital(hospital);
-        registPatient.register(currentVisit);
+//        registPatient.register(currentVisit);
 
 
         this.patientRepository.save(registPatient);

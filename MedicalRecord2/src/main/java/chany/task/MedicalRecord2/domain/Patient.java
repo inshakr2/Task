@@ -1,10 +1,13 @@
 package chany.task.MedicalRecord2.domain;
 
+import chany.task.MedicalRecord2.common.PatientKeyGenerator;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static chany.task.MedicalRecord2.common.PatientKeyGenerator.generate;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter @EqualsAndHashCode(of = "id")
@@ -14,7 +17,7 @@ public class Patient extends BaseEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PATIENT_ID")
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOSPITAL_ID")
     private Hospital hospital;
     @Column(name = "PATIENT_NAME")
@@ -29,8 +32,8 @@ public class Patient extends BaseEntity{
     private List<Visit> visits = new ArrayList<>();
 
     public void register(Visit visit) {
-        visit.setPatient(this);
         visits.add(visit);
+        this.code = generate(visit);
     }
 
 }
