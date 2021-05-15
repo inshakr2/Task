@@ -1,6 +1,7 @@
 package chany.task.MedicalRecord2.dto;
 
 import chany.task.MedicalRecord2.domain.Hospital;
+import chany.task.MedicalRecord2.domain.Patient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,8 @@ import java.time.LocalDateTime;
 public class VisitDto {
 
     @NotNull
-    private LocalDateTime dateTime = LocalDateTime.now();
+    private LocalDateTime dateTime;
     private Hospital hospital;
+    private Patient patient;
 
 }

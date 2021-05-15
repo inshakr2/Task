@@ -68,7 +68,7 @@ public class MainControllerTest {
     @Test
     public void 환자등록() throws Exception {
         // hospital
-        Hospital hospital = this.hospitalRepository.findById(1L).get();
+        Hospital hospital = this.hospitalRepository.findAll().get(0);
 
 
         // Given

@@ -4,6 +4,7 @@ import chany.task.MedicalRecord2.common.PatientKeyGenerator;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +32,12 @@ public class Patient extends BaseEntity{
     @OneToMany(mappedBy = "patient")
     private List<Visit> visits = new ArrayList<>();
 
+    public void register(LocalDateTime currentTime) {
+        this.code = generate(currentTime, this.getHospital());
+    }
+
     public void register(Visit visit) {
         visits.add(visit);
         this.code = generate(visit);
     }
-
 }

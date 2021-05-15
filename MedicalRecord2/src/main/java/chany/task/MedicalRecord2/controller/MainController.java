@@ -45,19 +45,20 @@ public class MainController {
         }
 
         Hospital currentHospital = patientDto.getHospital();
+        LocalDateTime currentTime = LocalDateTime.now();
+        Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
+
+        registPatient.register(currentTime);
+
         VisitDto visitDto = VisitDto.builder()
-                .dateTime(LocalDateTime.now())
+                .dateTime(currentTime)
                 .hospital(currentHospital)
                 .build();
-
-        Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
-        Visit currentVisit = this.modelMapper.map(visitDto, Visit.class);
-        this.visitRepository.save(currentVisit);
-
-//        registPatient.getVisits().add(currentVisit);
-        registPatient.register(currentVisit);
         this.patientRepository.save(registPatient);
 
+        Visit currentVisit = this.modelMapper.map(visitDto, Visit.class);
+        registPatient.getVisits().add(currentVisit);
+        this.visitRepository.save(currentVisit);
 
         URI location = linkTo(MainController.class).slash(registPatient.getId()).toUri();
 

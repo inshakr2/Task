@@ -77,24 +77,30 @@ public class domianTest {
                 .name("세브란스")
                 .chiefName("홍길동")
                 .build();
-
         this.hospitalRepository.save(hospital);
+
+        LocalDateTime currentTime = LocalDateTime.now();
 
         PatientDto patientDto = PatientDto.builder()
                 .name("유창열")
                 .birth("1993-02-08")
                 .gender("M")
                 .phoneNumber("010-1111-1111")
+                .hospital(hospital)
                 .build();
         Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
-
-        Visit currentVisit = this.modelMapper.map(new VisitDto(), Visit.class);
-        registPatient.setHospital(hospital);
-//        registPatient.register(currentVisit);
-
-
+        registPatient.register(currentTime);
         this.patientRepository.save(registPatient);
+
+        VisitDto visitDto = VisitDto.builder()
+                                    .dateTime(currentTime)
+                                    .hospital(hospital)
+                                    .patient(registPatient)
+                                    .build();
+        Visit currentVisit = this.modelMapper.map(visitDto, Visit.class);
         this.visitRepository.save(currentVisit);
+
+        registPatient.getVisits().add(currentVisit);
 
         assertThat(registPatient.getVisits().get(0).getDateTime()).isEqualTo(currentVisit.getDateTime());
         assertThat(registPatient.getHospital().getName()).isEqualTo(hospital.getName());
