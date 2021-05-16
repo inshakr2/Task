@@ -32,12 +32,4 @@ public class Patient extends BaseEntity{
     @OneToMany(mappedBy = "patient")
     private List<Visit> visits = new ArrayList<>();
 
-    public void register(LocalDateTime currentTime) {
-        this.code = generate(currentTime, this.getHospital());
-    }
-
-    public void register(Visit visit) {
-        visits.add(visit);
-        this.code = generate(visit);
-    }
 }

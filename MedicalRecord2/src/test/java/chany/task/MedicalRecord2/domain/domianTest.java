@@ -90,7 +90,6 @@ public class domianTest {
                 .hospital(hospital)
                 .build();
         Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
-        registPatient.register(currentTime);
         this.patientRepository.save(registPatient);
 
         VisitDto visitDto = VisitDto.builder()

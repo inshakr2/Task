@@ -1,7 +1,7 @@
 package chany.task.MedicalRecord2.controller;
 
-import chany.task.MedicalRecord2.domain.Hospital;
 import chany.task.MedicalRecord2.dto.PatientDto;
+import chany.task.MedicalRecord2.dto.RegisterDto;
 import chany.task.MedicalRecord2.repository.HospitalRepository;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
@@ -17,9 +17,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -50,38 +51,27 @@ public class MainControllerTest {
         this.patientRepository.deleteAll();
         this.visitRepository.deleteAll();
         this.hospitalRepository.deleteAll();
-
-        Hospital hospital = Hospital.builder()
-                .name("세브란스")
-                .chiefName("홍길동")
-                .build();
-
-        this.hospitalRepository.save(hospital);
     }
 
     @Test
     public void 환자등록() throws Exception {
-        // hospital
-        Hospital hospital = this.hospitalRepository.findAll().get(0);
-
-
-        // Given
-        PatientDto patientDto = PatientDto.builder()
-                .name("유창열")
-                .birth("1993-02-08")
-                .gender("M")
-                .phoneNumber("010-1111-1111")
-                .hospital(hospital)
+        // given
+        RegisterDto registerInfo = RegisterDto.builder()
+                .hospitalChiefName("홍길동")
+                .hospitalName("세브란스")
+                .patientBirth("1993-02-08")
+                .patientGender("M")
+                .patientName("chany")
+                .patientPhoneNumber("017")
+                .visitTime(LocalDateTime.of(1993,2,8,12,00))
                 .build();
-
 
         this.mockMvc.perform(post("/api/main/patients")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(this.objectMapper.writeValueAsString(patientDto)))
+                                .content(this.objectMapper.writeValueAsString(registerInfo)))
                         .andDo(print())
                         .andExpect(status().isCreated())
-                        .andExpect(jsonPath("name").exists())
-                        ;
+        ;
     }
 
     @Test
@@ -89,9 +79,9 @@ public class MainControllerTest {
         PatientDto patientDto = new PatientDto();
 
         this.mockMvc.perform(post("/api/main/patients")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(this.objectMapper.writeValueAsString(patientDto)))
-                            .andDo(print())
-                            .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(patientDto)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

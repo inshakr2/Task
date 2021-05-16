@@ -1,12 +1,11 @@
 package chany.task.MedicalRecord2.controller;
 
-import chany.task.MedicalRecord2.domain.Hospital;
 import chany.task.MedicalRecord2.domain.Patient;
-import chany.task.MedicalRecord2.domain.Visit;
-import chany.task.MedicalRecord2.dto.PatientDto;
-import chany.task.MedicalRecord2.dto.VisitDto;
+import chany.task.MedicalRecord2.domain.Register;
+import chany.task.MedicalRecord2.dto.RegisterDto;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
+import chany.task.MedicalRecord2.service.RegisterService;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-
 import java.net.URI;
-import java.time.LocalDateTime;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -29,39 +26,30 @@ public class MainController {
 
     private final PatientRepository patientRepository;
     private final VisitRepository visitRepository;
+    private final RegisterService registerService;
     private final ModelMapper modelMapper;
 
-    public MainController(PatientRepository patientRepository, VisitRepository visitRepository, ModelMapper modelMapper) {
+    public MainController(PatientRepository patientRepository, VisitRepository visitRepository, RegisterService registerService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.visitRepository = visitRepository;
+        this.registerService = registerService;
         this.modelMapper = modelMapper;
     }
 
+
     @PostMapping
-    public ResponseEntity registerPatient(@RequestBody @Valid PatientDto patientDto,
-                                          Errors errors) {
+    public ResponseEntity registerPatient_re(@RequestBody @Valid RegisterDto registerDto,
+                                             Errors errors) {
+
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors);
         }
 
-        Hospital currentHospital = patientDto.getHospital();
-        LocalDateTime currentTime = LocalDateTime.now();
-        Patient registPatient = this.modelMapper.map(patientDto, Patient.class);
+        Register registerInfo = this.modelMapper.map(registerDto, Register.class);
+        Patient createdPatient = this.registerService.register(registerInfo);
 
-        registPatient.register(currentTime);
+        URI location = linkTo(MainController.class).slash(createdPatient.getId()).toUri();
 
-        VisitDto visitDto = VisitDto.builder()
-                .dateTime(currentTime)
-                .hospital(currentHospital)
-                .build();
-        this.patientRepository.save(registPatient);
-
-        Visit currentVisit = this.modelMapper.map(visitDto, Visit.class);
-        registPatient.getVisits().add(currentVisit);
-        this.visitRepository.save(currentVisit);
-
-        URI location = linkTo(MainController.class).slash(registPatient.getId()).toUri();
-
-        return ResponseEntity.created(location).body(registPatient);
+        return ResponseEntity.created(location).body(createdPatient);
     }
 }
