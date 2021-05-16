@@ -1,17 +1,13 @@
 package chany.task.MedicalRecord2.controller;
 
 import chany.task.MedicalRecord2.domain.Hospital;
-import chany.task.MedicalRecord2.domain.Patient;
-import chany.task.MedicalRecord2.domain.Visit;
 import chany.task.MedicalRecord2.dto.PatientDto;
-import chany.task.MedicalRecord2.dto.VisitDto;
 import chany.task.MedicalRecord2.repository.HospitalRepository;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
