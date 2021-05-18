@@ -31,11 +31,11 @@ public class RegisterServiceImpl implements RegisterService {
         this.hospitalRepository.save(hospital);
 
         Visit visit = register.getVisit();
-        visit.setHospital(hospital);
         this.visitRepository.save(visit);
 
         Patient patient = register.getPatient();
-        patient.setCode(PatientKeyGenerator.generate(visit));
+        patient.setHospital(hospital);
+        patient.setCode(PatientKeyGenerator.generate(hospital.getId(), visit));
         patient.getVisits().add(visit);
         this.patientRepository.save(patient);
 

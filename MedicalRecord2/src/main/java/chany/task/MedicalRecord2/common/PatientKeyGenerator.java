@@ -8,10 +8,9 @@ import java.time.format.DateTimeFormatter;
 
 public class PatientKeyGenerator {
 
-    public static String generate(Visit visit) {
+    public static String generate(Long hospitalId, Visit visit) {
 
         String visitTime =  visit.getDateTime().format(DateTimeFormatter.ofPattern("YYMMdd_HHmm"));
-        Long hospitalId = visit.getHospital().getId();
 
         String key = String.format("%05d_%s", hospitalId, visitTime);
 
