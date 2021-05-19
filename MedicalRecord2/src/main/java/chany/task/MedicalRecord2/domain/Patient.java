@@ -18,7 +18,7 @@ public class Patient extends BaseEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PATIENT_ID")
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "HOSPITAL_ID")
     private Hospital hospital;
     @Column(name = "PATIENT_NAME")

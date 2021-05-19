@@ -1,5 +1,6 @@
 package chany.task.MedicalRecord2.controller;
 
+import chany.task.MedicalRecord2.common.RegisterValidator;
 import chany.task.MedicalRecord2.domain.Patient;
 import chany.task.MedicalRecord2.domain.Register;
 import chany.task.MedicalRecord2.dto.RegisterDto;
@@ -11,12 +12,11 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -28,17 +28,18 @@ public class MainController {
     private final VisitRepository visitRepository;
     private final RegisterService registerService;
     private final ModelMapper modelMapper;
+    private final RegisterValidator registerValidator;
 
-    public MainController(PatientRepository patientRepository, VisitRepository visitRepository, RegisterService registerService, ModelMapper modelMapper) {
+    public MainController(PatientRepository patientRepository, VisitRepository visitRepository, RegisterService registerService, ModelMapper modelMapper, RegisterValidator registerValidator) {
         this.patientRepository = patientRepository;
         this.visitRepository = visitRepository;
         this.registerService = registerService;
         this.modelMapper = modelMapper;
+        this.registerValidator = registerValidator;
     }
 
-
     @PostMapping
-    public ResponseEntity registerPatient_re(@RequestBody @Valid RegisterDto registerDto,
+    public ResponseEntity registerPatient(@RequestBody @Valid RegisterDto registerDto,
                                              Errors errors) {
 
         if (errors.hasErrors()) {
@@ -52,4 +53,33 @@ public class MainController {
 
         return ResponseEntity.created(location).body(createdPatient);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity updatePatient(@PathVariable Long id,
+                                        @RequestBody @Valid RegisterDto registerDto,
+                                        Errors errors) {
+
+        Optional<Patient> findPatient = this.patientRepository.findById(id);
+        if (findPatient.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        Patient existingPatient = findPatient.get();
+        registerValidator.validate(registerDto, existingPatient.getVisits(), errors);
+
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        Register register = this.modelMapper.map(registerDto, Register.class);
+        Patient updatedPatient = this.registerService.update(existingPatient, register);
+
+        return ResponseEntity.ok(updatedPatient);
+
+    }
+
 }

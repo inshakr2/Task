@@ -6,4 +6,5 @@ import chany.task.MedicalRecord2.domain.Register;
 public interface RegisterService {
 
     Patient register(Register register);
+    Patient update(Patient existingPatient, Register register);
 }

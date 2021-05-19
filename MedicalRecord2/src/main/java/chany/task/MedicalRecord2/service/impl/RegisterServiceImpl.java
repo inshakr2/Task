@@ -5,10 +5,13 @@ import chany.task.MedicalRecord2.domain.Hospital;
 import chany.task.MedicalRecord2.domain.Patient;
 import chany.task.MedicalRecord2.domain.Register;
 import chany.task.MedicalRecord2.domain.Visit;
+import chany.task.MedicalRecord2.dto.RegisterDto;
 import chany.task.MedicalRecord2.repository.HospitalRepository;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
 import chany.task.MedicalRecord2.service.RegisterService;
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +20,13 @@ public class RegisterServiceImpl implements RegisterService {
     private final PatientRepository patientRepository;
     private final HospitalRepository hospitalRepository;
     private final VisitRepository visitRepository;
+    private final ModelMapper modelMapper;
 
-    public RegisterServiceImpl(PatientRepository patientRepository, HospitalRepository hospitalRepository, VisitRepository visitRepository) {
+    public RegisterServiceImpl(PatientRepository patientRepository, HospitalRepository hospitalRepository, VisitRepository visitRepository, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.hospitalRepository = hospitalRepository;
         this.visitRepository = visitRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -42,4 +47,20 @@ public class RegisterServiceImpl implements RegisterService {
         return patient;
     }
 
+    @Override
+    public Patient update(Patient existingPatient, Register register) {
+
+        Hospital updatedHospital = register.getHospital();
+        Patient updatePatient = register.getPatient();
+
+        this.modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+
+        this.modelMapper.map(updatedHospital, existingPatient.getHospital());
+        this.hospitalRepository.save(existingPatient.getHospital());
+
+        this.modelMapper.map(updatePatient, existingPatient);
+        this.patientRepository.save(existingPatient);
+
+        return existingPatient;
+    }
 }
