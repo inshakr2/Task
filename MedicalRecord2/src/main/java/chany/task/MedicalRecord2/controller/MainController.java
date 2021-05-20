@@ -82,4 +82,19 @@ public class MainController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletePatient(@PathVariable Long id) {
+        Optional<Patient> findPatient = this.patientRepository.findById(id);
+
+        if (findPatient.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        this.patientRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+
+    }
+
+
+
 }

@@ -25,8 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -158,6 +157,23 @@ public class MainControllerTest {
                         .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void 환자삭제() throws Exception {
+        Register register = this.generateRegister();
+        Long id = register.getPatient().getId();
+
+        this.mockMvc.perform(delete("/api/main/patients/{id}", id))
+                        .andExpect(status().isOk());
+    }
+
+    @Test
+    public void 없는_환자삭제_404() throws Exception {
+        this.patientRepository.deleteAll();
+
+        this.mockMvc.perform(delete("/api/main/patients/0"))
+                        .andExpect(status().isNotFound());
+    }
+
     private Register generateRegister() {
         RegisterDto registerDto = RegisterDto.builder()
                                                 .patientName("창열")
@@ -174,4 +190,5 @@ public class MainControllerTest {
 
         return register;
     }
+
 }
