@@ -1,9 +1,9 @@
 package chany.task.MedicalRecord2.controller;
 
-import chany.task.MedicalRecord2.common.RegisterValidator;
 import chany.task.MedicalRecord2.domain.Patient;
 import chany.task.MedicalRecord2.domain.Register;
 import chany.task.MedicalRecord2.dto.RegisterDto;
+import chany.task.MedicalRecord2.dto.UpdateRegisterDto;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
 import chany.task.MedicalRecord2.service.RegisterService;
@@ -28,14 +28,12 @@ public class MainController {
     private final VisitRepository visitRepository;
     private final RegisterService registerService;
     private final ModelMapper modelMapper;
-    private final RegisterValidator registerValidator;
 
-    public MainController(PatientRepository patientRepository, VisitRepository visitRepository, RegisterService registerService, ModelMapper modelMapper, RegisterValidator registerValidator) {
+    public MainController(PatientRepository patientRepository, VisitRepository visitRepository, RegisterService registerService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.visitRepository = visitRepository;
         this.registerService = registerService;
         this.modelMapper = modelMapper;
-        this.registerValidator = registerValidator;
     }
 
     @PostMapping
@@ -56,7 +54,7 @@ public class MainController {
 
     @PutMapping("/{id}")
     public ResponseEntity updatePatient(@PathVariable Long id,
-                                        @RequestBody @Valid RegisterDto registerDto,
+                                        @RequestBody @Valid UpdateRegisterDto updateRegisterDto,
                                         Errors errors) {
 
         Optional<Patient> findPatient = this.patientRepository.findById(id);
@@ -69,13 +67,7 @@ public class MainController {
         }
 
         Patient existingPatient = findPatient.get();
-        registerValidator.validate(registerDto, existingPatient.getVisits(), errors);
-
-        if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        Register register = this.modelMapper.map(registerDto, Register.class);
+        Register register = this.modelMapper.map(updateRegisterDto, Register.class);
         Patient updatedPatient = this.registerService.update(existingPatient, register);
 
         return ResponseEntity.ok(updatedPatient);

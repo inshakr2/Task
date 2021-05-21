@@ -53,8 +53,6 @@ public class RegisterServiceImpl implements RegisterService {
         Hospital updatedHospital = register.getHospital();
         Patient updatePatient = register.getPatient();
 
-        this.modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-
         this.modelMapper.map(updatedHospital, existingPatient.getHospital());
         this.hospitalRepository.save(existingPatient.getHospital());
 

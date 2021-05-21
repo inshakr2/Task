@@ -6,6 +6,7 @@ import chany.task.MedicalRecord2.domain.Register;
 import chany.task.MedicalRecord2.domain.Visit;
 import chany.task.MedicalRecord2.dto.PatientDto;
 import chany.task.MedicalRecord2.dto.RegisterDto;
+import chany.task.MedicalRecord2.dto.UpdateRegisterDto;
 import chany.task.MedicalRecord2.repository.HospitalRepository;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
@@ -98,21 +99,21 @@ public class MainControllerTest {
     @Test
     public void 환자수정() throws Exception {
         Register register = this.generateRegister();
-        RegisterDto registerDto = this.modelMapper.map(register, RegisterDto.class);
+        UpdateRegisterDto dto = this.modelMapper.map(register, UpdateRegisterDto.class);
 
         String name = "유창열";
         String birth = "1993-02-08";
         String gender = "M";
         String hospitalName = "Sebrance";
 
-        registerDto.setPatientName(name);
-        registerDto.setPatientBirth(birth);
-        registerDto.setPatientGender(gender);
-        registerDto.setHospitalName(hospitalName);
+        dto.setPatientName(name);
+        dto.setPatientBirth(birth);
+        dto.setPatientGender(gender);
+        dto.setHospitalName(hospitalName);
 
         this.mockMvc.perform(put("/api/main/patients/{id}", register.getPatient().getId())
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(this.objectMapper.writeValueAsString(registerDto)))
+                                .content(this.objectMapper.writeValueAsString(dto)))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("name").value(name))
@@ -124,17 +125,17 @@ public class MainControllerTest {
     @Test
     public void 환자수정_없는환자_404() throws Exception {
         Register register = this.generateRegister();
-        RegisterDto registerDto = this.modelMapper.map(register, RegisterDto.class);
+        UpdateRegisterDto dto = this.modelMapper.map(register, UpdateRegisterDto.class);
 
         String name = "유창열";
         String birth = "1993-02-08";
 
-        registerDto.setPatientName(name);
-        registerDto.setPatientBirth(birth);
+        dto.setPatientName(name);
+        dto.setPatientBirth(birth);
 
-        this.mockMvc.perform(put("/api/main/patients/{id}", 102382)
+        this.mockMvc.perform(put("/api/main/patients/{id}", 0)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(this.objectMapper.writeValueAsString(registerDto)))
+                                .content(this.objectMapper.writeValueAsString(dto)))
                         .andDo(print())
                         .andExpect(status().isNotFound());
     }
