@@ -1,16 +1,12 @@
 package chany.task.MedicalRecord2.controller;
 
-import chany.task.MedicalRecord2.domain.Hospital;
-import chany.task.MedicalRecord2.domain.Patient;
 import chany.task.MedicalRecord2.domain.Register;
-import chany.task.MedicalRecord2.domain.Visit;
 import chany.task.MedicalRecord2.dto.PatientDto;
 import chany.task.MedicalRecord2.dto.RegisterDto;
 import chany.task.MedicalRecord2.dto.UpdateRegisterDto;
 import chany.task.MedicalRecord2.repository.HospitalRepository;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
-import chany.task.MedicalRecord2.service.RegisterService;
 import chany.task.MedicalRecord2.service.impl.RegisterServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -74,7 +70,7 @@ public class MainControllerTest {
                 .patientGender("M")
                 .patientName("chany")
                 .patientPhoneNumber("017")
-                .visitTime(LocalDateTime.of(1993,2,8,12,00))
+                .visitDateTime(LocalDateTime.of(1993,2,8,12,00))
                 .build();
 
         this.mockMvc.perform(post("/api/main/patients")
@@ -149,7 +145,7 @@ public class MainControllerTest {
         LocalDateTime visit = LocalDateTime.of(1993,2,8,12,00);
 
         registerDto.setPatientName(name);
-        registerDto.setVisitTime(visit);
+        registerDto.setVisitDateTime(visit);
 
         this.mockMvc.perform(put("/api/main/patients/{id}", register.getPatient().getId())
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -175,6 +171,19 @@ public class MainControllerTest {
                         .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void 환자조회() throws Exception {
+
+        Register register = this.generateRegister();
+        Long id = register.getPatient().getId();
+
+        this.mockMvc.perform(get("/api/main/patients/{id}", id))
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+
+    }
+
     private Register generateRegister() {
         RegisterDto registerDto = RegisterDto.builder()
                                                 .patientName("창열")
@@ -183,7 +192,7 @@ public class MainControllerTest {
                                                 .patientBirth("930208")
                                                 .hospitalName("길병원")
                                                 .hospitalChiefName("홍길동")
-                                                .visitTime(LocalDateTime.now())
+                                                .visitDateTime(LocalDateTime.now())
                                                 .build();
 
         Register register = this.modelMapper.map(registerDto, Register.class);
@@ -191,5 +200,4 @@ public class MainControllerTest {
 
         return register;
     }
-
 }

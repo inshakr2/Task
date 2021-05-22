@@ -2,6 +2,7 @@ package chany.task.MedicalRecord2.controller;
 
 import chany.task.MedicalRecord2.domain.Patient;
 import chany.task.MedicalRecord2.domain.Register;
+import chany.task.MedicalRecord2.dto.QueryDto;
 import chany.task.MedicalRecord2.dto.RegisterDto;
 import chany.task.MedicalRecord2.dto.UpdateRegisterDto;
 import chany.task.MedicalRecord2.repository.PatientRepository;
@@ -85,6 +86,19 @@ public class MainController {
         this.patientRepository.deleteById(id);
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getQuery(@PathVariable Long id) {
+        Optional<Patient> findPatient = this.patientRepository.findById(id);
+
+        if (findPatient.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        QueryDto queryDto = this.modelMapper.map(findPatient.get(), QueryDto.class);
+
+        return ResponseEntity.ok(queryDto);
     }
 
 

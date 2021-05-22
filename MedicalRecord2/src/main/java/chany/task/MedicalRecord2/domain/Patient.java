@@ -1,14 +1,10 @@
 package chany.task.MedicalRecord2.domain;
 
-import chany.task.MedicalRecord2.common.PatientKeyGenerator;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static chany.task.MedicalRecord2.common.PatientKeyGenerator.generate;
 
 @Builder @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter @EqualsAndHashCode(of = "id")

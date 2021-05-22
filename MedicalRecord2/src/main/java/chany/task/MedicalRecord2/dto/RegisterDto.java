@@ -21,5 +21,5 @@ public class RegisterDto {
     private String patientPhoneNumber;
     private String patientBirth;
 
-    private LocalDateTime visitTime;
+    private LocalDateTime visitDateTime;
 }

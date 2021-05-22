@@ -5,12 +5,10 @@ import chany.task.MedicalRecord2.domain.Hospital;
 import chany.task.MedicalRecord2.domain.Patient;
 import chany.task.MedicalRecord2.domain.Register;
 import chany.task.MedicalRecord2.domain.Visit;
-import chany.task.MedicalRecord2.dto.RegisterDto;
 import chany.task.MedicalRecord2.repository.HospitalRepository;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
 import chany.task.MedicalRecord2.service.RegisterService;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 

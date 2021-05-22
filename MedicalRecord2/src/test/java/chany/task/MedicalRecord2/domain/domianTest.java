@@ -7,7 +7,6 @@ import chany.task.MedicalRecord2.repository.HospitalRepository;
 import chany.task.MedicalRecord2.repository.PatientRepository;
 import chany.task.MedicalRecord2.repository.VisitRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.modelmapper.ModelMapper;
@@ -131,7 +130,7 @@ public class domianTest {
 
         assertThat(dto.getHospitalName()).isEqualTo(register.getHospital().getName());
         assertThat(dto.getHospitalChiefName()).isEqualTo(register.getHospital().getChiefName());
-        assertThat(dto.getVisitTime()).isEqualTo(register.getVisit().getDateTime());
+        assertThat(dto.getVisitDateTime()).isEqualTo(register.getVisit().getDateTime());
         assertThat(dto.getPatientBirth()).isEqualTo(register.getPatient().getBirth());
         assertThat(dto.getPatientName()).isEqualTo(register.getPatient().getName());
         assertThat(dto.getPatientPhoneNumber()).isEqualTo(register.getPatient().getPhoneNumber());
@@ -149,14 +148,14 @@ public class domianTest {
                             .patientGender("M")
                             .patientName("chany")
                             .patientPhoneNumber("017")
-                            .visitTime(LocalDateTime.of(1993,2,8,12,00))
+                            .visitDateTime(LocalDateTime.of(1993,2,8,12,00))
                             .build();
 
         Register register = this.modelMapper.map(dto, Register.class);
 
         assertThat(register.getHospital().getName()).isEqualTo(dto.getHospitalName());
         assertThat(register.getHospital().getChiefName()).isEqualTo(dto.getHospitalChiefName());
-        assertThat(register.getVisit().getDateTime()).isEqualTo(dto.getVisitTime());
+        assertThat(register.getVisit().getDateTime()).isEqualTo(dto.getVisitDateTime());
         assertThat(register.getPatient().getName()).isEqualTo(dto.getPatientName());
         assertThat(register.getPatient().getBirth()).isEqualTo(dto.getPatientBirth());
         assertThat(register.getPatient().getGender()).isEqualTo(dto.getPatientGender());
