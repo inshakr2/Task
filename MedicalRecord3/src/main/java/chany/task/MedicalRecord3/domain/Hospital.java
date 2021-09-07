@@ -4,17 +4,20 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SequenceGenerator(
+        name = "HOSPITAL_SEQ_GEN",
+        sequenceName = "HOSPITAL_SEQ",
+        initialValue = 1, allocationSize = 1
+)
 public class Hospital extends BaseTimeEntity{
 
-    @Id @GeneratedValue
-    @Column(name = "HOSPITAL_ID")
+    @Id @Column(name = "HOSPITAL_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+                    generator = "HOSPITAL_SEQ_GEN")
     private Long id;
 
     @Column(name = "HOSPITAL_NAME", length = 45, nullable = false)

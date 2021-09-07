@@ -3,11 +3,12 @@ package chany.task.MedicalRecord3.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity @Getter
+@Entity @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Visit extends BaseTimeEntity{
 

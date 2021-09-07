@@ -1,5 +1,6 @@
-package chany.task.MedicalRecord3.repository.code;
+package chany.task.MedicalRecord3.repository.init;
 
+import chany.task.MedicalRecord3.domain.Hospital;
 import chany.task.MedicalRecord3.domain.code.Code;
 import chany.task.MedicalRecord3.domain.code.CodeGroup;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,4 @@ public class InitCode {
             em.persist(new Code("T", "검사", em.find(CodeGroup.class, "진료유형코드")));
         }
     }
-
-
-
 }
