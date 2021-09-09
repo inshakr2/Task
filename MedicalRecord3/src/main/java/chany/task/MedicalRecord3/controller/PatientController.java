@@ -33,7 +33,7 @@ public class PatientController {
 
     @PatchMapping("/patient/{id}")
     public ResponseEntity updatePatient(@PathVariable Long id,
-                                        @RequestBody PatientDto patientDto) {
+                                        @RequestBody @Valid PatientDto patientDto) {
 
         Patient patient = patientService.updatePatient(id, patientDto);
         return ResponseEntity.ok(patient);

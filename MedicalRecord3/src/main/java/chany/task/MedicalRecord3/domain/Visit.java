@@ -25,7 +25,7 @@ public class Visit extends BaseTimeEntity{
     private Patient patient;
 
     @Column(name = "REGISTER_DATE", nullable = false)
-    private LocalDateTime registerDate;
+    private LocalDateTime registerDate = LocalDateTime.now();
 
     @Column(name = "VISIT_CODE", length = 10, nullable = false)
     private String visitCode;
