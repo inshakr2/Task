@@ -14,24 +14,25 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/patient")
 public class PatientController {
 
     private final PatientService patientService;
 
-    @GetMapping("/patient/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getPatient(@PathVariable Long id) {
         Patient patient = patientService.getPatient(id);
         return ResponseEntity.ok(patient);
     }
 
-    @PostMapping("/patient")
+    @PostMapping
     public ResponseEntity createPatient(@RequestBody @Valid PatientDto patientDto) {
         Patient patient = patientService.savePatient(patientDto);
         URI location = linkTo(PatientController.class).slash(patient.getId()).toUri();
         return ResponseEntity.created(location).body(patient);
     }
 
-    @PatchMapping("/patient/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity updatePatient(@PathVariable Long id,
                                         @RequestBody @Valid PatientDto patientDto) {
 
@@ -39,7 +40,7 @@ public class PatientController {
         return ResponseEntity.ok(patient);
     }
 
-    @DeleteMapping("/patient/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
         return ResponseEntity.ok().build();

@@ -35,7 +35,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient getPatient(Long id) {
 
-        Patient patient = patientRepository.findById(id).orElse(null);
+        Patient patient = patientRepository.findPatientEntityGraph(id).orElse(null);
         if (patient == null) {
             throw new EntityNotFoundException("존재하지 않는 회원입니다.");
         }
@@ -48,11 +48,13 @@ public class PatientServiceImpl implements PatientService {
     public Patient updatePatient(Long id, PatientDto patientDto) {
         Patient patient = getPatient(id);
 
-        patient.setHospital(hospitalRepository.findById(patientDto.getHospitalId()).orElse(null));
-        patient.setBirth(patientDto.getBirth());
-        patient.setGenderCode(patientDto.getGenderCode());
-        patient.setPatientName(patientDto.getName());
-        patient.setPhoneNumber(patientDto.getPhoneNumber());
+        // 기존 병원 ID값과 비교해서 다를 경우에만 update
+        if (patient.getHospital().getId() == patientDto.getHospitalId()) {
+            patient.updatePatient(patientDto);
+        } else {
+            Hospital hospital = hospitalRepository.findById(patientDto.getHospitalId()).orElseThrow();
+            patient.updatePatient(patientDto, hospital);
+        }
 
         return patientRepository.save(patient);
     }
