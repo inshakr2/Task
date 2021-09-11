@@ -7,39 +7,38 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(value = "/visit")
 public class VisitController {
 
     private final VisitService visitService;
 
-    @GetMapping("/visit/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getVisit(@PathVariable Long id) {
         Visit visit = visitService.getVisit(id);
         return ResponseEntity.ok(visit);
     }
 
-    @PostMapping("/visit")
-    public ResponseEntity createVisit(@RequestBody @Valid VisitDto visitDto) {
+    @PostMapping
+    public ResponseEntity createVisit(@RequestBody VisitDto visitDto) {
         Visit visit = visitService.registerVisit(visitDto);
         URI location = linkTo(VisitController.class).slash(visit.getId()).toUri();
         return ResponseEntity.created(location).body(visit);
     }
 
-    @PatchMapping("/visit/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity updateVisit(@PathVariable Long id,
-                                      @RequestBody @Valid VisitDto visitDto) {
+                                      @RequestBody VisitDto visitDto) {
         Visit visit = visitService.updateVisit(id, visitDto);
         return ResponseEntity.ok(visit);
     }
 
-    @DeleteMapping("/visit/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteVisit(@PathVariable Long id) {
         visitService.deleteVisit(id);
         return ResponseEntity.ok().build();

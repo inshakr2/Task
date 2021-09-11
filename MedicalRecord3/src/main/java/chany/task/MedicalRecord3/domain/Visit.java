@@ -8,8 +8,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity @Getter @Setter(AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Visit extends BaseTimeEntity{
 
     @Id @GeneratedValue
@@ -35,5 +35,18 @@ public class Visit extends BaseTimeEntity{
         this.patient = patient;
         this.registerDate = registerDate;
         this.visitCode = visitCode;
+    }
+
+    public void updateVisit(Hospital hospital, Patient patient, String visitCode, LocalDateTime visitDate) {
+        this.setHospital(hospital);
+        this.setPatient(patient);
+        this.setVisitCode(visitCode);
+        this.setRegisterDate(visitDate);
+    }
+
+    public void updateVisit(Hospital hospital, String visitCode, LocalDateTime visitDate) {
+        this.setHospital(hospital);
+        this.setVisitCode(visitCode);
+        this.setRegisterDate(visitDate);
     }
 }

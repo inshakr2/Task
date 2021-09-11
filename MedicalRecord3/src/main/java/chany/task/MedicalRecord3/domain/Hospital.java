@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @SequenceGenerator(
         name = "HOSPITAL_SEQ_GEN",
         sequenceName = "HOSPITAL_SEQ",

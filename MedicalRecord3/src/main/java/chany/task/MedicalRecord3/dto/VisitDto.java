@@ -6,16 +6,17 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter @Setter @Builder
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 public class VisitDto {
 
     @NotNull
     private Long hospitalId;
 
     // Patient
-    @NotNull
+    private Long patientId;
+    @NotNull(groups = FirstVisit.class)
     private String patientName;
-    @NotNull
+    @NotNull(groups = FirstVisit.class)
     private String genderCode;
     private String birth;
     private String phoneNumber;
@@ -25,8 +26,8 @@ public class VisitDto {
     private String visitCode;
     private LocalDateTime visitDate = LocalDateTime.now();
 
-    public VisitDto(@NotNull Long hospitalId, @NotNull String patientName,
-                    @NotNull String genderCode, String birth, String phoneNumber,
+    public VisitDto(@NotNull Long hospitalId, @NotNull(groups = FirstVisit.class) String patientName,
+                    @NotNull(groups = FirstVisit.class) String genderCode, String birth, String phoneNumber,
                     @NotNull String visitCode, LocalDateTime visitDate) {
         this.hospitalId = hospitalId;
         this.patientName = patientName;
