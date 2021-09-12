@@ -1,6 +1,7 @@
 package chany.task.MedicalRecord3.domain;
 
 import chany.task.MedicalRecord3.dto.PatientDto;
+import chany.task.MedicalRecord3.utils.PatientKeyGenerator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity @Getter @Setter(AccessLevel.PROTECTED)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Patient extends BaseTimeEntity {
 
     @Id @GeneratedValue
@@ -31,14 +32,14 @@ public class Patient extends BaseTimeEntity {
     @Column(name = "PHONE_NUMBER", length = 20)
     private String phoneNumber;
 
-    public Patient(Hospital hospital, String patientName, String patientCode,
-                   String genderCode, String birth, String phoneNumber) {
+    public Patient(Hospital hospital, String patientName, String genderCode,
+                   String birth, String phoneNumber, PatientCodeSeq seq) {
         this.hospital = hospital;
         this.patientName = patientName;
-        this.patientCode = patientCode;
         this.genderCode = genderCode;
         this.birth = birth;
         this.phoneNumber = phoneNumber;
+        this.patientCode = PatientKeyGenerator.getPatientKey(this, seq);
     }
 
     public void updatePatient(PatientDto patientDto, Hospital hospital) {

@@ -26,7 +26,7 @@ class EntityTest {
     @Test
     public void entityTest() {
         Hospital hospital = new Hospital("Sebrance", "SB", "Chany");
-        Patient patient = new Patient(hospital, "Yu", "PATIENT01", "M", "930208", "01029785737");
+        Patient patient = new Patient(hospital, "Yu", "M", "930208", "01029785737");
         Visit visit = new Visit(hospital, patient, LocalDateTime.now(), "1");
 
         hospitalRepository.save(hospital);

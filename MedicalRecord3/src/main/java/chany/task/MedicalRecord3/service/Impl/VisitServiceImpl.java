@@ -3,9 +3,11 @@ package chany.task.MedicalRecord3.service.Impl;
 import chany.task.MedicalRecord3.domain.Hospital;
 import chany.task.MedicalRecord3.domain.Patient;
 import chany.task.MedicalRecord3.domain.Visit;
+import chany.task.MedicalRecord3.domain.PatientCodeSeq;
 import chany.task.MedicalRecord3.dto.FirstVisit;
 import chany.task.MedicalRecord3.dto.VisitDto;
 import chany.task.MedicalRecord3.repository.HospitalRepository;
+import chany.task.MedicalRecord3.repository.PatientCodeSeqRepository;
 import chany.task.MedicalRecord3.repository.PatientRepository;
 import chany.task.MedicalRecord3.repository.VisitRepository;
 import chany.task.MedicalRecord3.service.VisitService;
@@ -15,7 +17,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +27,23 @@ public class VisitServiceImpl implements VisitService {
     private final HospitalRepository hospitalRepository;
     private final PatientRepository patientRepository;
     private final VisitRepository visitRepository;
+    private final PatientCodeSeqRepository codeSeqRepository;
 
     @Validated(FirstVisit.class)
     public Patient firstVisit(@Valid VisitDto visitDto, Hospital hospital) {
-        Patient patient = new Patient(hospital, visitDto.getPatientName(), "s", visitDto.getGenderCode(),
-                                    visitDto.getBirth(), visitDto.getPhoneNumber());
+
+        String seqId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYMMdd"));
+        PatientCodeSeq seq = codeSeqRepository.findById(seqId).orElse(null);
+
+        if (seq == null) {
+            seq = new PatientCodeSeq();
+            codeSeqRepository.save(seq);
+        } else {
+            seq.countUp();
+        }
+
+        Patient patient = new Patient(hospital, visitDto.getPatientName(), visitDto.getGenderCode(),
+                                    visitDto.getBirth(), visitDto.getPhoneNumber(), seq);
         return patientRepository.save(patient);
     }
 
@@ -48,16 +63,21 @@ public class VisitServiceImpl implements VisitService {
         if (hospital == null) {
             throw new EntityNotFoundException("존재하지 않는 병원입니다.");
         }
-        // 환자 ID가 있는 경우, 기존 환자 조회하여 사용. 없는 ID인 경우 throw
-        Patient visitPatient = new Patient();
-        if (visitDto.getPatientId() != null) {
-            visitPatient = alreadyVisit(visitDto);
-        } else {
-            visitPatient = firstVisit(visitDto, hospital);
-        }
 
-        Visit visit = new Visit(hospital, visitPatient, visitDto.getVisitDate(), visitDto.getVisitCode());
-        return visitRepository.save(visit);
+        // 환자 ID가 있는 경우, 기존 환자 조회하여 사용. 없는 ID인 경우 throw
+
+        if (visitDto.getPatientId() != null) {
+
+            Patient visitPatient = alreadyVisit(visitDto);
+            Visit visit = new Visit(hospital, visitPatient, visitDto.getVisitDate(), visitDto.getVisitCode());
+            return visitRepository.save(visit);
+
+        } else {
+
+            Patient visitPatient = firstVisit(visitDto, hospital);
+            Visit visit = new Visit(hospital, visitPatient, visitDto.getVisitDate(), visitDto.getVisitCode());
+            return visitRepository.save(visit);
+        }
     }
 
     @Override

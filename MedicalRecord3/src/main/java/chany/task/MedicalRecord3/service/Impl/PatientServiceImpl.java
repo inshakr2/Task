@@ -2,17 +2,19 @@ package chany.task.MedicalRecord3.service.Impl;
 
 import chany.task.MedicalRecord3.domain.Hospital;
 import chany.task.MedicalRecord3.domain.Patient;
+import chany.task.MedicalRecord3.domain.PatientCodeSeq;
 import chany.task.MedicalRecord3.dto.PatientDto;
 import chany.task.MedicalRecord3.repository.HospitalRepository;
+import chany.task.MedicalRecord3.repository.PatientCodeSeqRepository;
 import chany.task.MedicalRecord3.repository.PatientRepository;
 import chany.task.MedicalRecord3.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -20,14 +22,28 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final HospitalRepository hospitalRepository;
+    private final PatientCodeSeqRepository codeSeqRepository;
 
     @Override
     @Transactional
     public Patient savePatient(PatientDto patientDto) {
         Hospital hospital = hospitalRepository.findById(patientDto.getHospitalId()).orElse(null);
+        if (hospital == null) {
+            throw new EntityNotFoundException("존재하지 않는 병원입니다.");
+        }
 
-        Patient newPatient = new Patient(hospital, patientDto.getName(), "s",
-                patientDto.getGenderCode(), patientDto.getBirth(), patientDto.getPhoneNumber());
+        String seqId = LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYMMdd"));
+        PatientCodeSeq seq = codeSeqRepository.findById(seqId).orElse(null);
+
+        if (seq == null) {
+            seq = new PatientCodeSeq();
+            codeSeqRepository.save(seq);
+        } else {
+            seq.countUp();
+        }
+
+        Patient newPatient = new Patient(hospital, patientDto.getName(), patientDto.getGenderCode(),
+                 patientDto.getBirth(), patientDto.getPhoneNumber(), seq);
 
         return patientRepository.save(newPatient);
     }
