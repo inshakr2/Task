@@ -4,6 +4,7 @@ import chany.task.MedicalRecord3.domain.Hospital;
 import chany.task.MedicalRecord3.domain.Patient;
 import chany.task.MedicalRecord3.domain.PatientCodeSeq;
 import chany.task.MedicalRecord3.dto.PatientDto;
+import chany.task.MedicalRecord3.dto.PatientResponseDto;
 import chany.task.MedicalRecord3.repository.HospitalRepository;
 import chany.task.MedicalRecord3.repository.PatientCodeSeqRepository;
 import chany.task.MedicalRecord3.repository.PatientRepository;
@@ -15,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +61,16 @@ public class PatientServiceImpl implements PatientService {
         }
 
         return patient;
+    }
+
+    @Override
+    public List<PatientResponseDto> getPatients() {
+        List<Patient> allPatients = patientRepository.findAll();
+        List<PatientResponseDto> responsePatients =
+                allPatients.stream().map(m -> new PatientResponseDto(m)).
+                        collect(Collectors.toList());
+
+        return responsePatients;
     }
 
     @Override
