@@ -1,5 +1,6 @@
 package chany.task.MedicalRecord3.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Visit extends BaseTimeEntity{
     @JoinColumn(name = "HOSPITAL_ID")
     private Hospital hospital;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PATIENT_ID")
     private Patient patient;
@@ -30,9 +32,19 @@ public class Visit extends BaseTimeEntity{
     @Column(name = "VISIT_CODE", length = 10, nullable = false)
     private String visitCode;
 
-    public Visit(Hospital hospital, Patient patient, LocalDateTime registerDate, String visitCode) {
+    public static Visit registerVisit(Hospital hospital, Patient patient, LocalDateTime registerDate, String visitCode) {
+        Visit visit = new Visit();
+        visit.setHospital(hospital);
+        visit.setPatient(patient);
+        visit.setRegisterDate(registerDate);
+        visit.setVisitCode(visitCode);
+        patient.getVisits().add(visit);
+
+        return visit;
+    }
+
+    public Visit(Hospital hospital, LocalDateTime registerDate, String visitCode) {
         this.hospital = hospital;
-        this.patient = patient;
         this.registerDate = registerDate;
         this.visitCode = visitCode;
     }

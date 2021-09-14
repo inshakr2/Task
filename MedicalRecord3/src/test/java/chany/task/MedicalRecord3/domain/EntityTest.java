@@ -23,15 +23,20 @@ class EntityTest {
     @Autowired
     PatientRepository patientRepository;
 
+
     @Test
     public void entityTest() {
         Hospital hospital = new Hospital("Sebrance", "SB", "Chany");
-        Patient patient = new Patient(hospital, "Yu", "M", "930208", "01029785737");
-        Visit visit = new Visit(hospital, patient, LocalDateTime.now(), "1");
-
         hospitalRepository.save(hospital);
-        patientRepository.save(patient);
+
+        Visit visit = new Visit(hospital, LocalDateTime.now(), "1");
         visitRepository.save(visit);
+
+        PatientCodeSeq patientCodeSeq = new PatientCodeSeq();
+        Patient patient = new Patient(hospital, "Yu", "M", "930208",
+                "01029785737", patientCodeSeq);
+
+        patientRepository.save(patient);
 
         Hospital findHP = hospitalRepository.findById(hospital.getId()).get();
         Patient findPT = patientRepository.findById(patient.getId()).get();

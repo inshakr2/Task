@@ -26,7 +26,7 @@ public class PatientCodeSeq implements Persistable {
 
     @Override
     public Object getId() {
-        return null;
+        return created;
     }
 
     @Override

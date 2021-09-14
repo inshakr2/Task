@@ -13,6 +13,7 @@ import chany.task.MedicalRecord3.repository.VisitRepository;
 import chany.task.MedicalRecord3.service.VisitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
@@ -57,6 +58,7 @@ public class VisitServiceImpl implements VisitService {
 
 
     @Override
+    @Transactional
     public Visit registerVisit(VisitDto visitDto) {
 
         Hospital hospital = hospitalRepository.findById(visitDto.getHospitalId()).orElse(null);
@@ -64,20 +66,16 @@ public class VisitServiceImpl implements VisitService {
             throw new EntityNotFoundException("존재하지 않는 병원입니다.");
         }
 
-        // 환자 ID가 있는 경우, 기존 환자 조회하여 사용. 없는 ID인 경우 throw
-
+        // DTO에 환자 ID가 있는 경우, 기존 환자 조회하여 사용. else의 경우 새로 등록
+        Patient visitPatient;
         if (visitDto.getPatientId() != null) {
-
-            Patient visitPatient = alreadyVisit(visitDto);
-            Visit visit = new Visit(hospital, visitPatient, visitDto.getVisitDate(), visitDto.getVisitCode());
-            return visitRepository.save(visit);
-
+            visitPatient = alreadyVisit(visitDto);
         } else {
+            visitPatient = firstVisit(visitDto, hospital);
 
-            Patient visitPatient = firstVisit(visitDto, hospital);
-            Visit visit = new Visit(hospital, visitPatient, visitDto.getVisitDate(), visitDto.getVisitCode());
-            return visitRepository.save(visit);
         }
+        Visit visit = Visit.registerVisit(hospital, visitPatient, visitDto.getVisitDate(), visitDto.getVisitCode());
+        return visitRepository.save(visit);
     }
 
     @Override
@@ -92,6 +90,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
+    @Transactional
     public Visit updateVisit(Long id, VisitDto visitDto) {
 
         Visit visit = getVisit(id);
@@ -117,6 +116,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
+    @Transactional
     public void deleteVisit(Long id) {
         visitRepository.deleteById(id);
     }
