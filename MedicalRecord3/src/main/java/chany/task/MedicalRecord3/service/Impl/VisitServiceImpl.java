@@ -49,7 +49,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     public Patient alreadyVisit(@Valid VisitDto visitDto) {
-        Patient patient = patientRepository.findById(visitDto.getPatientId()).orElse(null);
+        Patient patient = patientRepository.findWithVisits(visitDto.getPatientId()).orElse(null);
         if (patient == null) {
             throw new EntityNotFoundException("존재하지 않는 환자입니다.");
         }

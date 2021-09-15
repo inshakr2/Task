@@ -2,6 +2,7 @@ package chany.task.MedicalRecord3.dto;
 
 import chany.task.MedicalRecord3.domain.Patient;
 import chany.task.MedicalRecord3.domain.Visit;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
@@ -16,13 +17,15 @@ public class PatientResponseDto {
     private String phoneNumber;
     private String latestVisit;
 
-    public PatientResponseDto(Patient patient) {
-        this.name = patient.getPatientName();
-        this.patientCode = patient.getPatientCode();
-        this.gender = getGender2Kor(patient.getGenderCode());
-        this.birth = patient.getBirth();
-        this.phoneNumber = patient.getPhoneNumber();
-        this.latestVisit = getLatestVisit2Str(patient.getVisits());
+    @QueryProjection
+    public PatientResponseDto(String name, String patientCode, String gender, String birth,
+                              String phoneNumber, List<Visit> visits) {
+        this.name = name;
+        this.patientCode = patientCode;
+        this.gender = getGender2Kor(gender);
+        this.birth = birth;
+        this.phoneNumber = phoneNumber;
+        this.latestVisit = getLatestVisit2Str(visits);
     }
 
     private String getGender2Kor(String gender) {

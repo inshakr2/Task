@@ -3,6 +3,7 @@ package chany.task.MedicalRecord3.controller;
 import chany.task.MedicalRecord3.domain.Patient;
 import chany.task.MedicalRecord3.dto.PatientDto;
 import chany.task.MedicalRecord3.dto.PatientResponseDto;
+import chany.task.MedicalRecord3.dto.PatientSearchCondition;
 import chany.task.MedicalRecord3.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,8 @@ public class PatientController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity getPatients() {
-        List<PatientResponseDto> patients = patientService.getPatients();
+    public ResponseEntity getPatients(@RequestBody PatientSearchCondition condition) {
+        List<PatientResponseDto> patients = patientService.getPatients(condition);
         return ResponseEntity.ok(patients);
     }
 

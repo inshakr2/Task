@@ -39,6 +39,7 @@ public class Visit extends BaseTimeEntity{
         visit.setRegisterDate(registerDate);
         visit.setVisitCode(visitCode);
         patient.getVisits().add(visit);
+        patient.setHospital(hospital);
 
         return visit;
     }
