@@ -4,8 +4,10 @@ import chany.task.MedicalRecord3.domain.Patient;
 import chany.task.MedicalRecord3.dto.PatientResponseDto;
 import chany.task.MedicalRecord3.dto.PatientSearchCondition;
 import chany.task.MedicalRecord3.repository.PatientRepositoryCustom;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -24,21 +26,26 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
     }
 
     @Override
-    public List<PatientResponseDto> searchByCondition(PatientSearchCondition condition) {
+    public List<PatientResponseDto> searchByCondition(PatientSearchCondition condition,
+                                                      int pageNo, int pageSize) {
 
-        List<Patient> patients = queryFactory
+        QueryResults<Patient> results = queryFactory
                 .selectFrom(patient).distinct()
                 .leftJoin(patient.visits, visit)
                 .where(
-                    nameLike(condition.getName()),
-                    regiLike(condition.getRegiNo()),
-                    birthLike(condition.getBirth()))
-                .fetch();
+                        nameLike(condition.getName()),
+                        regiLike(condition.getRegiNo()),
+                        birthLike(condition.getBirth()))
+                .offset(pageNo)
+                .limit(pageSize)
+                .fetchResults();
 
-        return patients.stream()
-                .map(p -> new PatientResponseDto(p.getPatientName(), p.getPatientCode(), p.getGenderCode(),
-                                                p.getBirth(), p.getPhoneNumber(), p.getVisits()))
-                .collect(Collectors.toList());
+        List<PatientResponseDto> content = results.getResults().stream()
+                    .map(p -> new PatientResponseDto(p.getPatientName(), p.getPatientCode(), p.getGenderCode(),
+                        p.getBirth(), p.getPhoneNumber(), p.getVisits()))
+                    .collect(Collectors.toList());
+
+        return content;
 
     }
 

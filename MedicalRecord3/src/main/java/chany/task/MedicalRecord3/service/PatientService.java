@@ -13,7 +13,8 @@ public interface PatientService {
 
     Patient getPatient(Long id);
 
-    List<PatientResponseDto> getPatients(PatientSearchCondition condition);
+    List<PatientResponseDto> getPatients(PatientSearchCondition condition,
+                                         int pageNo, int pageSize);
 
     Patient updatePatient(Long id, PatientDto patientDto);
 

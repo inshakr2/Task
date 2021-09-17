@@ -6,5 +6,6 @@ import chany.task.MedicalRecord3.dto.PatientSearchCondition;
 import java.util.List;
 
 public interface PatientRepositoryCustom {
-    List<PatientResponseDto> searchByCondition(PatientSearchCondition condition);
+    List<PatientResponseDto> searchByCondition(PatientSearchCondition condition,
+                                               int pageNo, int pageSize);
 }

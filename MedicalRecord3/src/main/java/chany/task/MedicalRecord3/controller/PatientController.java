@@ -29,8 +29,10 @@ public class PatientController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity getPatients(@RequestBody PatientSearchCondition condition) {
-        List<PatientResponseDto> patients = patientService.getPatients(condition);
+    public ResponseEntity getPatients(@RequestBody PatientSearchCondition condition,
+                                      @RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo,
+                                      @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        List<PatientResponseDto> patients = patientService.getPatients(condition, pageNo, pageSize);
         return ResponseEntity.ok(patients);
     }
 
