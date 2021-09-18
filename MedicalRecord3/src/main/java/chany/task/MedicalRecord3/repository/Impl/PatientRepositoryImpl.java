@@ -29,7 +29,7 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
     public List<PatientResponseDto> searchByCondition(PatientSearchCondition condition,
                                                       int pageNo, int pageSize) {
 
-        QueryResults<Patient> results = queryFactory
+        List<Patient> results = queryFactory
                 .selectFrom(patient).distinct()
                 .leftJoin(patient.visits, visit)
                 .where(
@@ -38,15 +38,12 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                         birthLike(condition.getBirth()))
                 .offset(pageNo)
                 .limit(pageSize)
-                .fetchResults();
+                .fetch();
 
-        List<PatientResponseDto> content = results.getResults().stream()
+        return results.stream()
                     .map(p -> new PatientResponseDto(p.getPatientName(), p.getPatientCode(), p.getGenderCode(),
                         p.getBirth(), p.getPhoneNumber(), p.getVisits()))
                     .collect(Collectors.toList());
-
-        return content;
-
     }
 
     private BooleanExpression nameLike(String name) {

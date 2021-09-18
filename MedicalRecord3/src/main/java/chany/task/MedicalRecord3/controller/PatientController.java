@@ -32,8 +32,8 @@ public class PatientController {
     public ResponseEntity getPatients(@RequestBody PatientSearchCondition condition,
                                       @RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo,
                                       @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
-        List<PatientResponseDto> patients = patientService.getPatients(condition, pageNo, pageSize);
-        return ResponseEntity.ok(patients);
+        List<PatientResponseDto> patients = patientService.getPatients(condition, pageNo-1, pageSize);
+        return ResponseEntity.ok(patients.isEmpty() ? "검색결과가 없습니다." : patients);
     }
 
     @PostMapping
