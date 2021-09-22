@@ -1,5 +1,6 @@
 package chany.task.MedicalRecord4.domain;
 
+import chany.task.MedicalRecord4.dto.PatientDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +32,28 @@ public class Patient extends BaseTimeEntity{
     private String birth;
     @Column(name = "PHONE_NUMBER", length = 20)
     private String phoneNumber;
+
+    public void addVisit(Visit visit) {
+        this.getVisits().add(visit);
+        visit.setPatient(this);
+    }
+
+    public static Patient createPatient(PatientDto patientDto) {
+        Patient patient = new Patient();
+        patient.setPatientName(patientDto.getName());
+        patient.setBirth(patientDto.getBirth());
+        patient.setGenderCode(patientDto.getGenderCode());
+        patient.setPhoneNumber(patientDto.getPhoneNumber());
+        patient.setPatientCode("-");
+
+        return patient;
+    }
+
+    public void updatePatient(PatientDto patientDto) {
+        this.patientName = patientDto.getName();
+        this.genderCode = patientDto.getGenderCode();
+        this.birth = patientDto.getBirth();
+        this.phoneNumber = patientDto.getPhoneNumber();
+    }
 
 }
