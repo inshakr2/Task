@@ -25,7 +25,7 @@ public class VisitServiceImpl implements VisitService {
             throw new EntityNotFoundException("존재하지 않는 병원입니다.");
         }
 
-        Visit visit = new Visit(hospital, visitDto);
+        Visit visit = Visit.createVisit(hospital, visitDto);
         return visitRepository.save(visit);
     }
 

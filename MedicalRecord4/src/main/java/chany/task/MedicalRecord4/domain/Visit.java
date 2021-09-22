@@ -31,10 +31,13 @@ public class Visit extends BaseTimeEntity{
     @Column(name = "VISIT_CODE", length = 10, nullable = false)
     private String visitCode;
 
-    public Visit(Hospital hospital, VisitDto visitDto) {
-        this.hospital = hospital;
-        this.registerDate = visitDto.getVisitDate();
-        this.visitCode = visitDto.getVisitCode();
+    public static Visit createVisit(Hospital hospital, VisitDto visitDto) {
+        Visit visit = new Visit();
+        visit.setHospital(hospital);
+        visit.setRegisterDate(visitDto.getVisitDate());
+        visit.setVisitCode(visitDto.getVisitCode());
+
+        return visit;
     }
 
     public void updateVisit(VisitDto visitDto) {
