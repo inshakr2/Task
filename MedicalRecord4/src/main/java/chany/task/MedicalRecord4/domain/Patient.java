@@ -1,6 +1,8 @@
 package chany.task.MedicalRecord4.domain;
 
 import chany.task.MedicalRecord4.dto.PatientDto;
+import chany.task.MedicalRecord4.dto.RegisterDto;
+import chany.task.MedicalRecord4.utils.PatientCodeGenerator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +38,24 @@ public class Patient extends BaseTimeEntity{
     public void addVisit(Visit visit) {
         this.getVisits().add(visit);
         visit.setPatient(this);
+    }
+
+    public void registerPatientCode(PatientCodeSeq seq) {
+        this.setPatientCode(PatientCodeGenerator.getCode(this, seq));
+    }
+
+    public static Patient registerPatient(RegisterDto registerDto, Visit visit, PatientCodeSeq seq) {
+        Patient patient = new Patient();
+        patient.setPatientName(registerDto.getName());
+        patient.setBirth(registerDto.getBirth());
+        patient.setGenderCode(registerDto.getGenderCode());
+        patient.setPhoneNumber(registerDto.getPhoneNumber());
+
+        patient.addVisit(visit);
+
+        patient.setPatientCode(PatientCodeGenerator.getCode(patient, seq));
+
+        return patient;
     }
 
     public static Patient createPatient(PatientDto patientDto) {

@@ -8,6 +8,7 @@ import chany.task.MedicalRecord4.repository.VisitRepository;
 import chany.task.MedicalRecord4.service.VisitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -19,6 +20,7 @@ public class VisitServiceImpl implements VisitService {
     private final HospitalRepository hospitalRepository;
 
     @Override
+    @Transactional
     public Visit createVisit(VisitDto visitDto) {
         Hospital hospital = hospitalRepository.findById(visitDto.getHospitalId()).orElse(null);
         if (hospital == null) {
@@ -35,6 +37,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
+    @Transactional
     public Visit updateVisit(Long id, VisitDto visitDto) {
 
         Visit visit = getVisit(id);
@@ -57,6 +60,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
+    @Transactional
     public void deleteVisit(Long id) {
         visitRepository.deleteById(id);
     }

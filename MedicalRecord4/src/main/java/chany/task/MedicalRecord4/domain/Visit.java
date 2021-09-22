@@ -1,5 +1,6 @@
 package chany.task.MedicalRecord4.domain;
 
+import chany.task.MedicalRecord4.dto.RegisterDto;
 import chany.task.MedicalRecord4.dto.VisitDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -36,6 +37,14 @@ public class Visit extends BaseTimeEntity{
         visit.setHospital(hospital);
         visit.setRegisterDate(visitDto.getVisitDate());
         visit.setVisitCode(visitDto.getVisitCode());
+
+        return visit;
+    }
+    public static Visit createVisit(Hospital hospital, RegisterDto registerDto) {
+        Visit visit = new Visit();
+        visit.setHospital(hospital);
+        visit.setRegisterDate(registerDto.getVisitDate());
+        visit.setVisitCode(registerDto.getVisitCode());
 
         return visit;
     }

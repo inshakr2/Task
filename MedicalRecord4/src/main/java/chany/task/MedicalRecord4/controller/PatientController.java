@@ -2,6 +2,7 @@ package chany.task.MedicalRecord4.controller;
 
 import chany.task.MedicalRecord4.domain.Patient;
 import chany.task.MedicalRecord4.dto.PatientDto;
+import chany.task.MedicalRecord4.dto.RegisterDto;
 import chany.task.MedicalRecord4.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,16 @@ public class PatientController {
         return ResponseEntity.ok(patient);
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity createPatient(@RequestBody @Valid PatientDto patientDto) {
         Patient patient = patientService.createPatient(patientDto);
+        URI location = linkTo(VisitController.class).slash(patient.getId()).toUri();
+        return ResponseEntity.created(location).body(patient);
+    }
+
+    @PostMapping
+    public ResponseEntity registerPatient(@RequestBody RegisterDto registerDto) {
+        Patient patient = patientService.registerPatient(registerDto);
         URI location = linkTo(VisitController.class).slash(patient.getId()).toUri();
         return ResponseEntity.created(location).body(patient);
     }

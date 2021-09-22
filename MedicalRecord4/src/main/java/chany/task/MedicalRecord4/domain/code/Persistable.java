@@ -5,6 +5,6 @@ import org.springframework.lang.Nullable;
 public interface Persistable<ID> {
 
     @Nullable
-    ID gedId();
+    ID getId();
     boolean isNew();
 }

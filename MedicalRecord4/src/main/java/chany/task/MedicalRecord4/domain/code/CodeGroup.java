@@ -21,7 +21,7 @@ public class CodeGroup extends BaseTimeEntity implements Persistable<String> {
     private String description;
 
     @Override
-    public String gedId() {
+    public String getId() {
         return codeGroup;
     }
 
