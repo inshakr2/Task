@@ -33,7 +33,14 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public Visit getVisit(Long id) {
-        return visitRepository.findById(id).orElse(null);
+
+        Visit visit = visitRepository.findById(id).orElse(null);
+
+        if (visit == null) {
+            throw new EntityNotFoundException("존재하지 않는 방문기록입니다.");
+        }
+
+        return visit;
     }
 
     @Override

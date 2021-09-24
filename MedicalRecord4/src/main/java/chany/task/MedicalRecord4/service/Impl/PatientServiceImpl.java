@@ -107,7 +107,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient getPatient(Long id) {
-        Patient patient = patientRepository.findById(id).orElse(null);
+        Patient patient = patientRepository.findWithVisits(id).orElse(null);
         if (patient == null) {
             throw new EntityNotFoundException("존재하지 않는 회원입니다.");
         }
