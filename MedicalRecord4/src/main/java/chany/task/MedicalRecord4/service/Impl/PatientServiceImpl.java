@@ -5,6 +5,7 @@ import chany.task.MedicalRecord4.domain.Patient;
 import chany.task.MedicalRecord4.domain.PatientCodeSeq;
 import chany.task.MedicalRecord4.domain.Visit;
 import chany.task.MedicalRecord4.dto.PatientDto;
+import chany.task.MedicalRecord4.dto.PatientQueryDto;
 import chany.task.MedicalRecord4.dto.RegisterDto;
 import chany.task.MedicalRecord4.dto.marker.AlreadyVisit;
 import chany.task.MedicalRecord4.dto.marker.FirstVisit;
@@ -22,6 +23,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -113,6 +116,22 @@ public class PatientServiceImpl implements PatientService {
         }
 
         return patient;
+    }
+
+    @Override
+    public List<PatientQueryDto> getPatients() {
+        List<Patient> patients = patientRepository.findAllWithVisits();
+        List<PatientQueryDto> results = new ArrayList<>();
+
+        for (Patient p : patients) {
+            results.add(new PatientQueryDto(p.getPatientName(),
+                                            p.getPatientCode(),
+                                            p.getGenderCode(),
+                                            p.getBirth(),
+                                            p.getPhoneNumber(),
+                                            p.getVisits()));
+        }
+        return results;
     }
 
     @Override

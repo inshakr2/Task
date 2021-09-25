@@ -2,7 +2,10 @@ package chany.task.MedicalRecord4.service;
 
 import chany.task.MedicalRecord4.domain.Patient;
 import chany.task.MedicalRecord4.dto.PatientDto;
+import chany.task.MedicalRecord4.dto.PatientQueryDto;
 import chany.task.MedicalRecord4.dto.RegisterDto;
+
+import java.util.List;
 
 public interface PatientService {
 
@@ -11,6 +14,8 @@ public interface PatientService {
     Patient registerPatient(RegisterDto registerDto);
 
     Patient getPatient(Long id);
+
+    List<PatientQueryDto> getPatients();
 
     Patient updatePatient(Long id, PatientDto patientDto);
 
