@@ -3,6 +3,7 @@ package chany.task.MedicalRecord4.controller;
 import chany.task.MedicalRecord4.domain.Patient;
 import chany.task.MedicalRecord4.dto.PatientDto;
 import chany.task.MedicalRecord4.dto.PatientQueryDto;
+import chany.task.MedicalRecord4.dto.PatientSearchCondition;
 import chany.task.MedicalRecord4.dto.RegisterDto;
 import chany.task.MedicalRecord4.service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class PatientController {
     public ResponseEntity getPatients() {
         List<PatientQueryDto> patients = patientService.getPatients();
         return ResponseEntity.ok(patients);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity getPatientsByCondition(@RequestBody PatientSearchCondition condition) {
+        List<PatientQueryDto> results = patientService.getPatientsByCondition(condition);
+        return ResponseEntity.ok(results.isEmpty() ? "검색결과가 없습니다." : results);
     }
 
     @PostMapping("/new")

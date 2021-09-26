@@ -1,6 +1,7 @@
 package chany.task.MedicalRecord4.dto;
 
 import chany.task.MedicalRecord4.domain.Visit;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
@@ -15,6 +16,7 @@ public class PatientQueryDto {
     private String phoneNumber;
     private String latestVisit;
 
+    @QueryProjection
     public PatientQueryDto(String name, String patientCode, String gender,
                            String birth, String phoneNumber, List<Visit> visits) {
         this.name = name;

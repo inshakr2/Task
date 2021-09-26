@@ -6,6 +6,7 @@ import chany.task.MedicalRecord4.domain.PatientCodeSeq;
 import chany.task.MedicalRecord4.domain.Visit;
 import chany.task.MedicalRecord4.dto.PatientDto;
 import chany.task.MedicalRecord4.dto.PatientQueryDto;
+import chany.task.MedicalRecord4.dto.PatientSearchCondition;
 import chany.task.MedicalRecord4.dto.RegisterDto;
 import chany.task.MedicalRecord4.dto.marker.AlreadyVisit;
 import chany.task.MedicalRecord4.dto.marker.FirstVisit;
@@ -132,6 +133,11 @@ public class PatientServiceImpl implements PatientService {
                                             p.getVisits()));
         }
         return results;
+    }
+
+    @Override
+    public List<PatientQueryDto> getPatientsByCondition(PatientSearchCondition condition) {
+        return patientRepository.searchByCondition(condition);
     }
 
     @Override

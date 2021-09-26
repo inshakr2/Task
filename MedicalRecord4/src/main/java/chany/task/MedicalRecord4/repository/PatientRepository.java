@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
+public interface PatientRepository extends JpaRepository<Patient, Long>, PatientRepositoryCustom {
 
     @Query("SELECT p FROM Patient p " +
             "JOIN FETCH p.visits v " +
