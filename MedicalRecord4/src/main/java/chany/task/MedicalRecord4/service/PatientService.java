@@ -17,7 +17,8 @@ public interface PatientService {
     Patient getPatient(Long id);
 
     List<PatientQueryDto> getPatients();
-    List<PatientQueryDto> getPatientsByCondition(PatientSearchCondition condition);
+    List<PatientQueryDto> getPatientsByCondition(PatientSearchCondition condition,
+                                                 int pageNo, int pageSize);
 
     Patient updatePatient(Long id, PatientDto patientDto);
 
