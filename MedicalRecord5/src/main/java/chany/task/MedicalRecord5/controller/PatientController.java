@@ -2,6 +2,7 @@ package chany.task.MedicalRecord5.controller;
 
 import chany.task.MedicalRecord5.domain.Patient;
 import chany.task.MedicalRecord5.dto.PatientDto;
+import chany.task.MedicalRecord5.dto.PatientQueryDto;
 import chany.task.MedicalRecord5.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -23,6 +25,12 @@ public class PatientController {
     public ResponseEntity getPatient(@PathVariable Long id) {
         Patient patient = patientService.getPatient(id);
         return ResponseEntity.ok(patient);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity getPatients() {
+        List<PatientQueryDto> patients = patientService.getPatients();
+        return ResponseEntity.ok(patients);
     }
 
     @PostMapping
