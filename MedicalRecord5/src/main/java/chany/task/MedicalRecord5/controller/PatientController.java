@@ -3,6 +3,7 @@ package chany.task.MedicalRecord5.controller;
 import chany.task.MedicalRecord5.domain.Patient;
 import chany.task.MedicalRecord5.dto.PatientDto;
 import chany.task.MedicalRecord5.dto.PatientQueryDto;
+import chany.task.MedicalRecord5.dto.PatientResponseDto;
 import chany.task.MedicalRecord5.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class PatientController {
 
     @GetMapping("/all")
     public ResponseEntity getPatients() {
-        List<PatientQueryDto> patients = patientService.getPatients();
+        List<PatientResponseDto> patients = patientService.getPatients();
         return ResponseEntity.ok(patients);
     }
 

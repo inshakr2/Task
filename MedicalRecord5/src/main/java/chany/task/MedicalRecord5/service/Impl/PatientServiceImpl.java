@@ -3,6 +3,7 @@ package chany.task.MedicalRecord5.service.Impl;
 import chany.task.MedicalRecord5.domain.Patient;
 import chany.task.MedicalRecord5.dto.PatientDto;
 import chany.task.MedicalRecord5.dto.PatientQueryDto;
+import chany.task.MedicalRecord5.dto.PatientResponseDto;
 import chany.task.MedicalRecord5.repository.PatientRepository;
 import chany.task.MedicalRecord5.service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,19 +50,13 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<PatientQueryDto> getPatients() {
-        List<Patient> patients = patientRepository.findAllWithVisits();
-        List<PatientQueryDto> results = new ArrayList<>();
+    public List<PatientResponseDto> getPatients() {
+        List<Patient> allPatients = patientRepository.findAll();
+        List<PatientResponseDto> responsePatients =
+                allPatients.stream().map(m -> new PatientResponseDto(m)).
+                        collect(Collectors.toList());
 
-        for (Patient p : patients) {
-            results.add(new PatientQueryDto(p.getPatientName(),
-                    p.getPatientCode(),
-                    p.getGenderCode(),
-                    p.getBirth(),
-                    p.getPhoneNumber(),
-                    p.getVisits()));
-        }
-        return results;
+        return responsePatients;
     }
 
     @Override
