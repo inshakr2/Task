@@ -4,6 +4,7 @@ import chany.task.MedicalRecord5.domain.Patient;
 import chany.task.MedicalRecord5.dto.PatientDto;
 import chany.task.MedicalRecord5.dto.PatientQueryDto;
 import chany.task.MedicalRecord5.dto.PatientResponseDto;
+import chany.task.MedicalRecord5.dto.PatientSearchCondition;
 import chany.task.MedicalRecord5.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,12 @@ public class PatientController {
     public ResponseEntity getPatients() {
         List<PatientResponseDto> patients = patientService.getPatients();
         return ResponseEntity.ok(patients);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity getPatientsByCondition(@RequestBody PatientSearchCondition condition) {
+        List<PatientQueryDto> results = patientService.getPatientsByCondition(condition);
+        return ResponseEntity.ok(results.isEmpty() ? "검색결과가 없습니다." : results);
     }
 
     @PostMapping

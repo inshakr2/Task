@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
+public interface PatientRepository extends JpaRepository<Patient, Long>, PatientRepositoryCustom {
     @Query("SELECT p FROM Patient p " +
             "JOIN FETCH p.visits v " +
             "JOIN FETCH v.hospital " +

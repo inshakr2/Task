@@ -4,6 +4,7 @@ import chany.task.MedicalRecord5.domain.Patient;
 import chany.task.MedicalRecord5.dto.PatientDto;
 import chany.task.MedicalRecord5.dto.PatientQueryDto;
 import chany.task.MedicalRecord5.dto.PatientResponseDto;
+import chany.task.MedicalRecord5.dto.PatientSearchCondition;
 import chany.task.MedicalRecord5.repository.PatientRepository;
 import chany.task.MedicalRecord5.service.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,11 @@ public class PatientServiceImpl implements PatientService {
                         collect(Collectors.toList());
 
         return responsePatients;
+    }
+
+    @Override
+    public List<PatientQueryDto> getPatientsByCondition(PatientSearchCondition condition) {
+        return patientRepository.searchByCondition(condition);
     }
 
     @Override
