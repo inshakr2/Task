@@ -61,8 +61,9 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<PatientQueryDto> getPatientsByCondition(PatientSearchCondition condition) {
-        return patientRepository.searchByCondition(condition);
+    public List<PatientQueryDto> getPatientsByCondition(PatientSearchCondition condition,
+                                                        int pageNo, int pageSize) {
+        return patientRepository.searchByCondition(condition, pageNo, pageSize);
     }
 
     @Override

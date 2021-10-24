@@ -32,12 +32,14 @@ public class PatientController {
     @GetMapping("/all")
     public ResponseEntity getPatients() {
         List<PatientResponseDto> patients = patientService.getPatients();
-        return ResponseEntity.ok(patients);
+        return ResponseEntity.ok(patients.isEmpty() ? "검색결과가 없습니다." : patients);
     }
 
     @GetMapping("/search")
-    public ResponseEntity getPatientsByCondition(@RequestBody PatientSearchCondition condition) {
-        List<PatientQueryDto> results = patientService.getPatientsByCondition(condition);
+    public ResponseEntity getPatientsByCondition(@RequestBody PatientSearchCondition condition,
+                                                 @RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo,
+                                                 @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        List<PatientQueryDto> results = patientService.getPatientsByCondition(condition, pageNo -1, pageSize);
         return ResponseEntity.ok(results.isEmpty() ? "검색결과가 없습니다." : results);
     }
 

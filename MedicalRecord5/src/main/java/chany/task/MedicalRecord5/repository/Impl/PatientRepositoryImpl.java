@@ -24,7 +24,8 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
     }
 
     @Override
-    public List<PatientQueryDto> searchByCondition(PatientSearchCondition condition) {
+    public List<PatientQueryDto> searchByCondition(PatientSearchCondition condition,
+                                                   int pageNo, int pageSize) {
 
         List<Patient> results = queryFactory
                 .selectFrom(patient).distinct()
@@ -34,6 +35,8 @@ public class PatientRepositoryImpl implements PatientRepositoryCustom {
                         codeLike(condition.getCode()),
                         birthLike(condition.getBirth())
                 )
+                .offset(pageNo)
+                .limit(pageSize)
                 .fetch();
 
         return results.stream()
